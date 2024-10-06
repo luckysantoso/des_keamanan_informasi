@@ -100,6 +100,9 @@ sbox = [
      5, 3, 9, 6, 10, 11, 1, 15, 13, 4, 2, 8, 12, 7, 0, 14,
      7, 11, 2, 15, 3, 10, 1, 9, 8, 12, 6, 4, 14, 0, 5, 13]
 ]
+
+import os  # To generate random IV
+
 def text_to_bits(text):
     return [int(bit) for char in text for bit in bin(ord(char))[2:].zfill(8)]
 
@@ -123,7 +126,6 @@ def unpad(plaintext_padded):
     return plaintext_padded[:-padding_len]
 
 def permute(bits, table):
-    # Ensure we do not access an index that is out of range
     return [bits[i] for i in table if i < len(bits)]
 
 def left_rotate(bits, rotations):
@@ -176,34 +178,54 @@ def decrypt(ciphertext, key):
 
     return bits_to_text(permute(right + left, fp))
 
-def ecb_encrypt(plaintext, key):
+def cbc_encrypt(plaintext, key, iv):
     padded_plaintext = pad(plaintext)
     blocks = [padded_plaintext[i:i+8] for i in range(0, len(padded_plaintext), 8)]
-    encrypted_blocks = [encrypt(block, key) for block in blocks]
+    encrypted_blocks = []
+    
+    previous_block = text_to_bits(iv)
+    
+    for block in blocks:
+        block_bits = text_to_bits(block)
+        xor_result = [block_bits[i] ^ previous_block[i] for i in range(64)]
+        encrypted_block = encrypt(bits_to_text(xor_result), key)
+        encrypted_blocks.append(encrypted_block)
+        previous_block = text_to_bits(encrypted_block)
 
     return ''.join(encrypted_blocks)
 
-def ecb_decrypt(ciphertext, key):
+def cbc_decrypt(ciphertext, key, iv):
     blocks = [ciphertext[i:i+8] for i in range(0, len(ciphertext), 8)]
-
-    decrypted_blocks = [decrypt(block, key) for block in blocks]
+    decrypted_blocks = []
+    
+    previous_block = text_to_bits(iv)
+    
+    for block in blocks:
+        decrypted_block = decrypt(block, key)
+        decrypted_block_bits = text_to_bits(decrypted_block)
+        xor_result = [decrypted_block_bits[i] ^ previous_block[i] for i in range(64)]
+        decrypted_blocks.append(bits_to_text(xor_result))
+        previous_block = text_to_bits(block)
 
     decrypted_text = ''.join(decrypted_blocks)
     return unpad(decrypted_text)
 
 def main():
     while True:
-        print("DES Encryption and Decryption")
+        print("DES Encryption and Decryption in CBC Mode")
         choice = input("Pilih Opsi (1: Encrypt, 2: Decrypt, 3: Exit): ")
         if choice == '1':
             plaintext = input("Masukkan plaintext: ")
             key = input("Masukkan key (8 characters): ")
-            ciphertext = ecb_encrypt(plaintext, key)
+            iv = os.urandom(8).decode('latin1')  
+            ciphertext = cbc_encrypt(plaintext, key, iv)
             print(f"Ciphertext: {ciphertext}")
+            print(f"IV: {iv}")  
         elif choice == '2':
             ciphertext = input("Masukkan ciphertext: ")
             key = input("Masukkan key (8 characters): ")
-            plaintext = ecb_decrypt(ciphertext, key)
+            iv = input("Masukkan IV: ")  
+            plaintext = cbc_decrypt(ciphertext, key, iv)
             print(f"Plaintext: {plaintext}")
         elif choice == '3':
             break
