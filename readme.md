@@ -48,7 +48,7 @@ ECB (Electronic Codebook) adalah salah satu mode operasi dalam algoritma kriptog
 
 - Pola yang sama dalam plaintext menghasilkan pola yang sama dalam ciphertext, ini dapat digunakan untuk memecahkan enkripsi.
 
-# Implementasi DES dengan CBC (Electronic Code Book)
+# Implementasi DES dengan CBC (Cipher Block Chaining)
 
 Cipher Block Chaining (CBC) adalah mode operasi untuk kriptografi blok yang menggabungkan setiap blok plaintext dengan blok ciphertext sebelumnya sebelum dienkripsi. Setiap blok plaintext di-XOR dengan ciphertext blok sebelumnya.
 
