@@ -167,21 +167,21 @@ def decrypt(ciphertext, key):
 def main():
     while True:
         print("DES Encryption and Decryption")
-        choice = input("Choose an option (1: Encrypt, 2: Decrypt, 3: Exit): ")
+        choice = input("Pilih Opsi (1: Encrypt, 2: Decrypt, 3: Exit): ")
         if choice == '1':
-            plaintext = input("Enter plaintext: ")
-            key = input("Enter key (8 characters): ")
+            plaintext = input("Masukkan plaintext: ")
+            key = input("Masukkan key (8 characters): ")
             ciphertext = encrypt(plaintext, key)
             print(f"Ciphertext: {ciphertext}")
         elif choice == '2':
-            ciphertext = input("Enter ciphertext: ")
-            key = input("Enter key (8 characters): ")
+            ciphertext = input("Masukkan ciphertext: ")
+            key = input("Masukkan key (8 characters): ")
             plaintext = decrypt(ciphertext, key)
             print(f"Plaintext: {plaintext}")
         elif choice == '3':
             break
         else:
-            print("Invalid choice. Please try again.")
+            print("Pilihan Error")
 
 if __name__ == "__main__":
     main()
