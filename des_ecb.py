@@ -123,7 +123,6 @@ def unpad(plaintext_padded):
     return plaintext_padded[:-padding_len]
 
 def permute(bits, table):
-    # Ensure we do not access an index that is out of range
     return [bits[i] for i in table if i < len(bits)]
 
 def left_rotate(bits, rotations):
@@ -200,6 +199,8 @@ def main():
             key = input("Masukkan key (8 characters): ")
             ciphertext = ecb_encrypt(plaintext, key)
             print(f"Ciphertext: {ciphertext}")
+            plaintext = ecb_decrypt(ciphertext, key)
+            print(f"Plaintext: {plaintext}")
         elif choice == '2':
             ciphertext = input("Masukkan ciphertext: ")
             key = input("Masukkan key (8 characters): ")

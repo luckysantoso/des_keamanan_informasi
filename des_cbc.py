@@ -220,7 +220,9 @@ def main():
             iv = os.urandom(8).decode('latin1')  
             ciphertext = cbc_encrypt(plaintext, key, iv)
             print(f"Ciphertext: {ciphertext}")
-            print(f"IV: {iv}")  
+            print(f"IV: {iv}")
+            plaintext = cbc_decrypt(ciphertext, key, iv)
+            print(f"Plaintext: {plaintext}")  
         elif choice == '2':
             ciphertext = input("Masukkan ciphertext: ")
             key = input("Masukkan key (8 characters): ")
